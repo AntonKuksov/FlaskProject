@@ -4,11 +4,11 @@ Create a Python script that interacts with a public weather API, fetches data fo
 displays it in a readable format.
 Requirements:
 
-1. API Interaction
+### API Interaction
    - Use the OpenWeatherMap API, api.met.no or any similar weather API that provides
    current weather data for a city.
    - If the API requires an API key, the script should allow the key to be configured somehow.
-2. Functionality:
+### Functionality:
    1. The application should take a city name as input.
    2. Query the API for the current weather of the specified city.
    3. Parse and display the following weather information:
@@ -18,7 +18,9 @@ Requirements:
       - Humidity (if available)
       - Wind speed (if available)
    4. Display the temperature in both Celsius and Fahrenheit for user convenience.
-
+### Optional:
+- Allow users to request weather data for multiple cities at once.
+- Cache API responses for recent city queries to avoid redundant API calls (simple inmemory caching is fine).
 
 ### Solution
 

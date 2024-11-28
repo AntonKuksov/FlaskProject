@@ -2,14 +2,17 @@ import pytest
 from app import app
 from unittest.mock import patch
 
+from config.config import Config
+
+
 @pytest.fixture
 def client():
     app.config['TESTING'] = True
     app.config['SECRET_KEY'] = 'test_secret'
     with app.test_client() as client:
         with client.session_transaction() as session:
-            session['default_city'] = 'TestCity'
-            session['api_key'] = 'TestAPIKey'
+            session['default_city'] = Config.DEFAULT_CITY
+            session['api_key'] = Config.API_KEY
         yield client
 
 

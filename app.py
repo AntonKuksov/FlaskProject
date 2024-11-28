@@ -5,55 +5,40 @@ from service.request import get_forecast
 from utils.check_form import is_empty, is_number
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'.encode('utf8')
+app.secret_key = Config.SECRET_KEY
 
 
-error = {
-  "is_empty": "You were entering empty spaces. Please insert name of city",
-  "is_number": "You entered a number instead of the city name. Please insert name of city",
-}
 @app.route('/', methods=['POST', 'GET'])
 def load():
     if request.method == 'POST':
         if not is_empty(request.form['city']):
-            return render_template("error.html", error=error['is_empty'])
+            return render_template("error.html", error=Config.error['is_empty'])
         elif not is_number(request.form['city']):
-            return render_template("error.html", error=error['is_number'])
+            return render_template("error.html", error=Config.error['is_number'])
         else:
-            set_units(str(request.form.get('units')))
-            forecast_data = get_forecast(request.form['city'])
-            forecast_data.units = set_units(str(request.form.get('units')))
-            if isinstance(forecast_data, str):
-                return render_template("error.html", error=forecast_data)
-            else:
+            try:
+                session['units'] = str(request.form.get('units'))
+                forecast_data = get_forecast(request.form['city'])
+                forecast_data.units = session['units']
                 return render_template("index.html", forecast=forecast_data)
+            except RuntimeError:
+                return render_template("error.html", error=Config.error['wrong_city'])
     else:
-        Config.API_KEY = session['api_key']
-        forecast_data = get_forecast(session.get('default_city', Config.DEFAULT_CITY))
-        return render_template("index.html", forecast=forecast_data)
-
-def set_units(select_value)-> bool:
-    match select_value:
-        case "1":
-            Config.DEFAULT_UNITS = "metric"
-            return True
-        case "2":
-            Config.DEFAULT_UNITS = "imperial"
-            return False
-
+        try:
+            session['units'] = Config.DEFAULT_UNITS
+            forecast_data = get_forecast(session.get('default_city', Config.DEFAULT_CITY))
+            return render_template("index.html", forecast=forecast_data)
+        except RuntimeError:
+            return render_template("error.html", error=Config.error['wrong_city'])
 
 
 @app.route('/settings', methods=['POST', 'GET'])
 def settings():
-    default_city = session.get('default_city', Config.DEFAULT_CITY)
-    api_key = session.get('api_key', Config.API_KEY)
     if request.method == 'POST':
-        api_key = request.form.get('api_key', api_key)
-        session['api_key'] = api_key
-        default_city = request.form.get('default_city', default_city)
-        session['default_city'] = default_city
+        session['api_key'] = request.form.get('api_key', Config.API_KEY).strip() or Config.API_KEY
+        session['default_city'] = request.form.get('default_city', Config.DEFAULT_CITY).strip() or Config.DEFAULT_CITY
+    return render_template("settings.html", default_city=session.get('default_city', Config.DEFAULT_CITY), api_key=session.get('api_key', Config.API_KEY))
 
-    return render_template("settings.html", default_city=default_city, api_key=api_key)
 
 if __name__ == '__main__':
     app.run()

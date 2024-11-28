@@ -18,8 +18,8 @@
               </div>
             <div class="col-auto">
                 <select class="form-select" name="units" aria-label="Default select example">
-                  <option value="1" selected>Celsius </option>
-                  <option value="2">Fahrenheit</option>
+                  <option value="metric" selected>Celsius </option>
+                  <option value="imperial">Fahrenheit</option>
                 </select>
             </div>
         </div>
@@ -39,14 +39,14 @@
                 <td>{{forecast.city}}</td>
                 <td>
                 {{ forecast.current_temperature}}
-                    {% if forecast.units %}
+                    {% if forecast.units=="metric" %}
                     °C
                     {% else %}
                     °F
                     {% endif %}
                 </td>
               <td>{{forecast.humidity}}%</td>
-              <td>{{forecast.wind_speed}}{% if forecast.units %}
+              <td>{{forecast.wind_speed}}{% if forecast.units=="metric"  %}
                     m/s
                     {% else %}
                     mph

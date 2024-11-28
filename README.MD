@@ -23,6 +23,7 @@ Requirements:
 ### Solution
 
 I made it so that when we first enter the application, the weather data of the city that is set by default in the config is loaded. The default city can be changed on the settings page, and you can also configure the API key and save everything in the user session. The user also has a choice in which measurement system (metric or imperial) to request weather data.
+To get to the main page, click on the "Weather app" in the top left corner
 
 ### Run
 

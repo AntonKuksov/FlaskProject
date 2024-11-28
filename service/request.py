@@ -1,4 +1,5 @@
 import requests
+from flask import session
 from requests import RequestException
 
 from config.config import Config
@@ -16,7 +17,7 @@ def fetch_forecast(city: str) -> Forecast:
     try:
         params = {
             "q": city,
-            "units": Config.DEFAULT_UNITS,
+            "units": session.get('units', Config.DEFAULT_UNITS),
             "appid": Config.API_KEY,
         }
         response = requests.get(Config.API_URL, params=params)

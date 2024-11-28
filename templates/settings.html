@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+
+    <form class="row g-3" method="post">
+          <div class="col-auto">
+              <label for="inputCity" class="col-form-label h5">Enter API key</label>
+          </div>
+          <div class="col-auto">
+            <input type="text" class="form-control" value="{{ api_key }}" name="api_key" id="inputKey">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">Set key</button>
+          </div>
+    </form>
+
+    <form class="row g-3" method="post">
+         <div class="col-auto">
+              <label for="inputCity" class="col-form-label h5">DEFAULT_CITY</label>
+          </div>
+          <div class="col-auto">
+            <input type="text" class="form-control" value="{{ default_city }}" name="default_city" id="inputCity">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">Set default city</button>
+          </div>
+    </form>
+{% endblock %}

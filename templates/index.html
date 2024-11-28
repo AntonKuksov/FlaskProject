@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+    <form class="row g-3 mb-3" method="post">
+          <div class="col-auto">
+                    <label for="inputCity" class="col-form-label h5">Enter city</label>
+          </div>
+          <div class="col-auto">
+            <input type="text" class="form-control" name="city" id="inputCity">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">Send</button>
+          </div>
+        <div class="row">
+             <div class="col-auto">
+                    <label class="col-form-label h5">Display the temperature in</label>
+              </div>
+            <div class="col-auto">
+                <select class="form-select" name="units" aria-label="Default select example">
+                  <option value="1" selected>Celsius </option>
+                  <option value="2">Fahrenheit</option>
+                </select>
+            </div>
+        </div>
+    </form>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">City</th>
+              <th scope="col">Temperature</th>
+              <th scope="col">Humidity</th>
+              <th scope="col">Wind speed</th>
+              <th scope="col">Weather description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+                <td>{{forecast.city}}</td>
+                <td>
+                {{ forecast.current_temperature}}
+                    {% if forecast.units %}
+                    °C
+                    {% else %}
+                    °F
+                    {% endif %}
+                </td>
+              <td>{{forecast.humidity}}%</td>
+              <td>{{forecast.wind_speed}}{% if forecast.units %}
+                    m/s
+                    {% else %}
+                    mph
+                    {% endif %}</td>
+              <td>{{forecast.weather_description}}</td>
+            </tr>
+          </tbody>
+        </table>
+{% endblock %}

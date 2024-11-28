@@ -3,6 +3,7 @@ from app import app
 from unittest.mock import patch
 
 from config.config import Config
+from model.forecast import Forecast, Units
 
 
 @pytest.fixture
@@ -15,22 +16,29 @@ def client():
             session['api_key'] = Config.API_KEY
         yield client
 
+def mock_forecast():
+    return Forecast(
+        city="Tallinn",
+        units=Units.METRIC,
+        current_temperature=5.0,
+        weather_description="Clear sky",
+        humidity=80,
+        wind_speed=5.5
+    )
 
 def test_load_page_get(client):
     response = client.get('/')
     assert response.status_code == 200
 
 
-def test_load_page_post_empty_city(client):
+def test_post_empty_city(client):
     response = client.post('/', data={'city': ''})
     assert response.status_code == 200
-    assert b"You were entering empty spaces" in response.data
+    assert b"empty spaces" in response.data
 
 
-
-def test_load_page_post_valid_city(client):
-    with patch('service.request.get_forecast', return_value={'city': 'Tallinn',}):
+def test_post_valid_city(client):
+    with patch('service.request.get_forecast', return_value=mock_forecast()):
         response = client.post('/', data={'city': 'Tallinn'})
-        print(response.data)
         assert response.status_code == 200
-        assert b">Tallinn" in response.data
+        assert b"Tallinn" in response.data

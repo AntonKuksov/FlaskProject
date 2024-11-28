@@ -55,7 +55,11 @@ def get_cached_forecast(city: str, units: str) -> Forecast | None:
             return forecast
         else:
             logging.info(f"Cache expired for '{city}'")
-            cache.pop(city)
+            try:
+                cache.pop(city)
+            except Exception as e :
+                logging.error(f"Error for '{city}': {e}")
+
     return None
 
 

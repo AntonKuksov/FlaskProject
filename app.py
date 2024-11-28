@@ -10,26 +10,34 @@ app.secret_key = Config.SECRET_KEY
 
 @app.route('/', methods=['POST', 'GET'])
 def load():
+    forecasts = []
+    errors = []
     if request.method == 'POST':
-        if not is_empty(request.form['city']):
+        if not is_empty(request.form['cities']):
             return render_template("error.html", error=Config.error['is_empty'])
-        elif not is_number(request.form['city']):
+        elif not is_number(request.form['cities']):
             return render_template("error.html", error=Config.error['is_number'])
         else:
-            try:
-                session['units'] = str(request.form.get('units'))
-                forecast_data = get_forecast(request.form['city'])
-                forecast_data.units = session['units']
-                return render_template("index.html", forecast=forecast_data)
-            except RuntimeError:
-                return render_template("error.html", error=Config.error['wrong_city'])
+            session['units'] = str(request.form.get('units'))
+            cities = request.form['cities']
+            city_list = [city.strip() for city in cities.split(',')]
+            for city in city_list:
+                try:
+                    forecast = get_forecast(city)
+                    forecast.units = session['units']
+                    forecasts.append(forecast)
+                except RuntimeError as e:
+                    errors.append(f"Error fetching weather for {city}: {e}")
+                    return render_template("error.html", error=errors)
+            return render_template("index.html", forecasts=forecasts)
     else:
         try:
             session['units'] = Config.DEFAULT_UNITS
-            forecast_data = get_forecast(session.get('default_city', Config.DEFAULT_CITY))
-            return render_template("index.html", forecast=forecast_data)
+            forecast = get_forecast(session.get('default_city', Config.DEFAULT_CITY))
+            forecasts.append(forecast)
+            return render_template("index.html", forecasts=forecasts)
         except RuntimeError:
-            return render_template("error.html", error=Config.error['wrong_city'])
+            return render_template("error.html", error=Config.error['wrong_default_city'])
 
 
 @app.route('/settings', methods=['POST', 'GET'])

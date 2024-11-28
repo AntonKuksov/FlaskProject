@@ -12,5 +12,5 @@ class Config:
     error = {
         "is_empty": "You were entering empty spaces. Please insert name of city",
         "is_number": "You entered a number instead of the city name. Please insert name of city",
-        "wrong_city": "You entered an incorrect city name, please enter the name correctly.",
+        "wrong_default_city": "You entered an incorrect city name, please enter the name correctly in Settings.",
     }

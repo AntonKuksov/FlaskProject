@@ -4,11 +4,11 @@
 {% block body %}
     <form class="row g-3 mb-3" method="post">
           <div class="col-auto">
-                    <label for="inputCity" class="col-form-label h5">Enter city</label>
+             <label for="cities" class="col-form-label h5">Enter cities (comma-separated):</label>
           </div>
-          <div class="col-auto">
-            <input type="text" class="form-control" name="city" id="inputCity">
-          </div>
+           <div class="col-auto">
+             <input type="text" name="cities" class="form-control" id="cities" placeholder="City1, City2, City3">
+            </div>
           <div class="col-auto">
             <button type="submit" class="btn btn-primary mb-3">Send</button>
           </div>
@@ -35,24 +35,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-                <td>{{forecast.city}}</td>
-                <td>
-                {{ forecast.current_temperature}}
-                    {% if forecast.units=="metric" %}
-                    °C
-                    {% else %}
-                    °F
-                    {% endif %}
-                </td>
-              <td>{{forecast.humidity}}%</td>
-              <td>{{forecast.wind_speed}}{% if forecast.units=="metric"  %}
-                    m/s
-                    {% else %}
-                    mph
-                    {% endif %}</td>
-              <td>{{forecast.weather_description}}</td>
-            </tr>
+            {% for forecast in forecasts %}
+                <tr>
+                    <td>{{forecast.city}}</td>
+                    <td>{{ forecast.current_temperature}}{{ '°C' if forecast.units=="metric" else '°F' }}</td>
+                    <td>{{forecast.humidity}}%</td>
+                    <td>{{forecast.wind_speed}}{{ 'm/s' if forecast.units=="metric" else 'mph' }}</td>
+                    <td>{{forecast.weather_description}}</td>
+                </tr>
+            {% endfor %}
           </tbody>
         </table>
 {% endblock %}

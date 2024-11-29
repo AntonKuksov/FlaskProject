@@ -29,5 +29,5 @@ To get to the main page, click on the "Weather app" in the top left corner
 
 ### Run
 
-pip install -r requirements.txt
-Run app.py in this directory to see an example of usage of the app.
+- pip install -r requirements.txt
+- Run app.py in this directory to see an example of usage of the app.
